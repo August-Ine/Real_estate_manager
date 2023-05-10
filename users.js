@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema({
     userName: String,
     propertyName: String,
     propertyDescription: String,
-    longitude: String,
-    latitude: String
+    longitude: Number,
+    latitude: Number
 });
 
 //db model

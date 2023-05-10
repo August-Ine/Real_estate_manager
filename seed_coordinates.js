@@ -7,14 +7,24 @@ async function seedCoordinates() {
 
     for (let i = 0; i < numCoordinates; i++) {
         const username = faker.internet.userName();
-        const latitude = faker.address.latitude({
-            min: -1.2845,
-            max: -1.2644
-        });
-        const longitude = faker.address.longitude({
-            min: 36.8471,
-            max: 36.8779
-        });
+        // const latitude = faker.address.latitude({
+        //     min: -1.2845,
+        //     max: -1.2644
+        // });
+        // const longitude = faker.address.longitude({
+        //     min: 36.8471,
+        //     max: 36.8779
+        // });
+        const maxLat = -1.2644;
+        const minLat = -1.2845;
+
+        const maxLng = 36.8779;
+        const minLng = 36.8471;
+
+        //generate random coordinates within the limits of kamukunji constituency
+        const latitude = Math.random() * (maxLat - minLat) + minLat;
+        const longitude = Math.random() * (maxLng - minLng) + minLng;
+
         const propertyName = faker.address.streetName();
         const propertyDescription = faker.lorem.sentence();
 
