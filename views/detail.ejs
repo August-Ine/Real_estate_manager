@@ -1,0 +1,44 @@
+<%- include('partials/header') %>
+    <!-- <%= %> -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 centered" style="text-align: center;">
+                <h1>
+                    <%= selectedLocation.propertyName %>
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div id="map" style="width:500px;height:500px;"></div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card" style="width: 25rem;">
+                    <img src="/<%= selectedLocation.photoUrl %>" class="card-img-top" alt="image of location">
+                    <div class="card-body">
+                        <p class="card-text">
+                            <%= selectedLocation.propertyDescription %>
+                        </p>
+                        <a href="/" class="btn btn-primary">Back to Kamukunji map</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function initMap() {
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: <%= selectedLocation.latitude %>, lng: <%= selectedLocation.longitude %> }, // Set the initial center of the map
+                    zoom: 20 // Set the initial zoom level of the map
+                });
+
+                new google.maps.Marker({
+                    position: { lat: <%= selectedLocation.latitude %>, lng: <%= selectedLocation.longitude %> },
+                    map: map
+                });
+            }
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= mapsKey %>&callback=initMap"></script>
+    </div>
+
+
+    <%- include('partials/footer') %>

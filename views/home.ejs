@@ -1,7 +1,11 @@
 <%- include('partials/header') %>
 
-    <h1>Coordinates Map</h1>
-    <div id="map"></div>
+    <div class="container">
+        <div class="centered">
+            <h1>Real estate in Kamukunji</h1>
+        </div>
+        <div id="map" style="width:1000px;height:700px;"></div>
+    </div>
 
     <script>
         function initMap() {
@@ -10,15 +14,27 @@
                 zoom: 13 // Set the initial zoom level of the map
             });
 
-      // Iterate over the coordinates and create markers on the map
-      <% coordinates.forEach((coordinate) => { %>
-                new google.maps.Marker({
-                    position: { lat: <%= coordinate.latitude %>, lng: <%= coordinate.longitude %> },
-                    map: map
+
+            // Create an array to store the markers
+            const markers = [];
+
+            // Iterate over the coordinates and create markers on the map
+            <% coordinates.forEach((coordinate) => { %>
+                var marker = new google.maps.Marker({
+                position: { lat: <%= coordinate.latitude %>, lng: <%= coordinate.longitude %> },
+                map: map
+            });
+                // Add click event listener to each marker
+                marker.addListener('click', () => {
+                    // Redirect to a detail route when marker is clicked
+                    window.location.href = '/detail/<%= coordinate._id %>';
                 });
-      <% }); %>
-    }
+
+                // Add the marker to the markers array
+                markers.push(marker);
+            <% }); %>
+        }
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?sensor=false&callback=myMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= mapsKey %>&callback=initMap"></script>
 
     <%- include('partials/footer') %>

@@ -3,7 +3,7 @@ const faker = require('faker');
 const Users = require('./users');
 
 async function seedCoordinates() {
-    const numCoordinates = 10; // Specify the number of coordinates you want to generate
+    const numCoordinates = 12; // Specify the number of coordinates you want to generate
 
     for (let i = 0; i < numCoordinates; i++) {
         const username = faker.internet.userName();
@@ -15,6 +15,9 @@ async function seedCoordinates() {
         //     min: 36.8471,
         //     max: 36.8779
         // });
+
+        const photoUrl = "images/image_" + i.toString() + ".jpg"; //assign images randomly to locations
+
         const maxLat = -1.2644;
         const minLat = -1.2845;
 
@@ -29,7 +32,7 @@ async function seedCoordinates() {
         const propertyDescription = faker.lorem.sentence();
 
         // Create and save the coordinate in the database
-        const coordinate = new Users.User({ username, latitude, longitude, propertyName, propertyDescription });
+        const coordinate = new Users.User({ username, photoUrl, latitude, longitude, propertyName, propertyDescription });
         await coordinate.save();
     }
 

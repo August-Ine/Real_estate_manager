@@ -6,6 +6,7 @@ const dbName = "realestatedb";
 //db schema 
 const userSchema = new mongoose.Schema({
     userName: String,
+    photoUrl: String,
     propertyName: String,
     propertyDescription: String,
     longitude: Number,
@@ -30,8 +31,13 @@ async function connectDb() {
     }
 }
 
+function closeConnection() {
+    mongoose.connection.close();
+}
+
 //module exports
 module.exports = {
     User: User,
-    connectDb: connectDb
+    connectDb: connectDb,
+    closeConnection: closeConnection
 }

@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const users = require("./users");
 const seedCoordinates = require("./seed_coordinates");
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 //create app
 const app = express();
@@ -17,27 +18,97 @@ app.set('view engine', 'ejs');
 //serve public static files
 app.use(express.static("public"));
 
-//seed random coordinates and property names to db
-// seedCoordinates.seedCoordinates();
+//secret key
+const mapsKey = process.env.MAPS_API_KEY;
+
+//seed random coordinates and property names to db if db is empty
+async function seedData() {
+    try {
+        users.connectDb();
+        const coordinates = await users.User.find({});
+        if (coordinates.length === 0) seedCoordinates.seedCoordinates();
+    } catch (e) {
+        console.log(e);
+    }
+}
+seedData();
+
+//cached coordinates
+var coordinatesCache = [];
+
+async function getLocations() {
+    //attempt to retrieve from cache
+    if (coordinatesCache.length !== 0) { return coordinatesCache }
+
+    // Retrieve coordinates from the database
+    try {
+        const coordinates = await users.User.find({});
+        return coordinates;
+    } catch (e) {
+        return e;
+    }
+}
+
 
 //routes
 //root
 app.get("/", async (req, res) => {
-    console.log("endpoint reached");
     //connect to db 
     users.connectDb();
 
     // Retrieve coordinates from the database
     try {
-        const coordinates = await users.User.find({});
+        const coordinates = await getLocations();
 
-        // Render the EJS template and pass the coordinates
-        res.render('home', { coordinates: coordinates });
-        // Close the MongoDB connection
-        mongoose.connection.close();
+        if (coordinates) {
+            if (coordinatesCache.length === 0) {
+                //cache results
+                coordinatesCache = [...coordinates];
+            }
+            // Render the EJS template and pass the coordinates
+            res.render('home', { coordinates: coordinates, mapsKey: mapsKey });
+
+        } else {
+            res.sendStatus(404);
+        }
+
     } catch (e) {
         console.log(e);
         res.send(e);
+    }
+
+    // Close the MongoDB connection
+    users.closeConnection();
+});
+
+//location detail page
+app.get('/detail/:locationId', async (req, res) => {
+    // Access the parameter value using req.params
+    const locationId = req.params.locationId;
+
+    //used coordinatesCache to retrieve location info
+    if (coordinatesCache.length !== 0) {
+        const selectedLocation = coordinatesCache.find(coordinate => coordinate._id == locationId);
+        res.render('detail', { selectedLocation: selectedLocation, mapsKey: mapsKey }); // Pass the location data to the template
+    }
+
+    //no cache, fetch from db
+    else {
+        //connect to db 
+        users.connectDb();
+        await users.User.findById(locationId)
+            .then((foundLocation) => {
+                if (!foundLocation) {
+                    return res.status(404).json({ error: 'Location not found' });
+                }
+                res.render('detail', { selectedLocation: foundLocation }); // Pass the location data to the template
+                coordinatesCache.push(foundLocation); //cache results
+                // Close the MongoDB connection
+                users.closeConnection();
+            })
+            .catch((error) => {
+                res.status(500).json({ error: 'Server error' });
+            });
     }
 });
 

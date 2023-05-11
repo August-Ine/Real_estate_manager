@@ -3,13 +3,21 @@ body {
 }
 
 .centered {
-    padding-top: 200px;
+    margin: auto;
     text-align: center;
 }
 
-.secret-text {
+.container {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+    /* Adjust the height as needed */
+}
+
+.centered-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     text-align: center;
-    font-size: 2rem;
-    color: #fff;
-    background-color: #000;
 }
