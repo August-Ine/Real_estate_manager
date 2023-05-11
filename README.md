@@ -1,6 +1,6 @@
 # Real Estate Manager
 
-This repository contains the code for a Real Estate Manager application. The application allows users to manage real estate listings, including creating, updating, and deleting listings.
+This repository contains the code for a Real Estate Manager application. The application allows users to manage real estate listings, including creating, updating, and deleting listings. It utilises the googlemaps api to display the marker of the location of a listing on a map view. Users can access the details of a listing by clicking on a marker.
 
 ## How It Works
 
