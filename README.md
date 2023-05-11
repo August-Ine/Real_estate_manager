@@ -8,9 +8,11 @@ The application is built using Node.js, Express.js, MongoDB, and Mongoose. It fo
 
 - The `index.js` file serves as the entry point for the application. It sets up the Express server, connects to the MongoDB database, and defines the routes.
 
-- The `users.js` file contains the Mongoose schema definition for the real estate listings. The `Item.js` file defines the schema structure, including the name and description fields.
+- The `users.js` file contains the Mongoose schema definition for the real estate listings. It defines the real estate listing schema structure, including the name, description, longitude and latitude fields.
 
-- The `views` folder contains the EJS templates for rendering the HTML views. The `index.ejs` file displays the list of real estate listings, while the `update.ejs` file provides a form for updating a listing.
+- The `views` folder contains the EJS templates for rendering the HTML views. The `home.ejs` file displays the list of real estate listings, the `detail.ejs` file displays the details of a listing, while the `update.ejs` file provides a form for updating a listing. 
+
+- The `home.ejs` and `detail.ejs` ejs templates make use of the googlemaps api to display a map with markers of the coordinates of a real estate listing.
 
 ## Vulnerabilities and Recommendations
 
