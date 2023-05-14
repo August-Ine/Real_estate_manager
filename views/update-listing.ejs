@@ -1,0 +1,89 @@
+<%- include('partials/header') %>
+    <%- include('partials/nav') %>
+        <div class="container px-6">
+            <h2>Update listing: <%= listing.propertyName %>
+            </h2>
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <form class="forms" action="/update/<%= listing._id %>" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="userName" class="form-label">Property username: </label>
+                            <input type="text" class="form-control" id="userName" name="userName"
+                                placeholder="<%= listing.userName %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="photoUrl" class="form-label">Photo:</label>
+                            <img class="image-border" id="photoUrl" src="/<%= listing.photoUrl %>"
+                                alt="photo of listing">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber" class="form-label">Phone Number:</label>
+                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber"
+                                value="<%= listing.phoneNumber %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="constituency" class="form-label">Constituency:</label>
+                            <input type="text" class="form-control" id="constituency" name="constituency"
+                                value="<%= listing.constituency %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyName" class="form-label">Property Name:</label>
+                            <input type="text" class="form-control" id="propertyName" name="propertyName"
+                                value="<%= listing.propertyName %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="propertyDescription" class="form-label">Property Description:</label>
+                            <textarea class="form-control" id="propertyDescription" name="propertyDescription"
+                                value="<%= listing.propertyDescription %>"
+                                required><%= listing.propertyDescription %></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Upload Image:(Replaces old photo)</label>
+                            <input type="file" name="image" id="image" accept="image/*" class="form-control-file">
+                        </div>
+                        <div class="form-group">
+                            <div id="map" style="width: 400px; height: 400px;"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="longitude">Longitude:</label>
+                            <input type="text" id="longitude" name="longitude" value="<%= listing.longitude %>"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="latitude">Latitude:</label>
+                            <input type="text" id="latitude" name="latitude" value="<%= listing.latitude %>" required>
+                        </div>
+                        <div class="d-flex justify-content-center" style="margin-top: 40px; margin-bottom: 40px;">
+                            <button type="submit" class="btn btn-lg btn-primary">Submit</button>
+                            <button for="submitForm" type="input" onclick="window.location.href='/home/'"
+                                class="btn btn-lg btn-primary-outline">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            function initMap() {
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat:<%= listing.latitude %> , lng: <%= listing.longitude %> }, // Set the initial center of the map
+                    zoom: 15 // Adjust the zoom level as needed
+                });
+
+                const marker = new google.maps.Marker({
+                    position: { lat: <%= listing.latitude %>, lng: <%= listing.longitude %> },
+                    map: map,
+                    draggable: true // Allow the marker to be dragged
+                });
+
+                // Add an event listener for when the marker is dragged
+                marker.addListener('dragend', function (event) {
+                    const position = event.latLng;
+                    document.getElementById('latitude').value = position.lat();
+                    document.getElementById('longitude').value = position.lng();
+                });
+            }
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= mapsKey %>&callback=initMap"></script>
+        <%- include('partials/footer') %>

@@ -1,20 +1,32 @@
 const mongoose = require("mongoose");
+const passportLocalMongoose = require('passport-local-mongoose');
 
 //constants
 const dbName = "realestatedb";
 
-//db schema 
+//db schema
+//users
 const userSchema = new mongoose.Schema({
+    isAdmin: Boolean
+})
+//handle authentication
+userSchema.plugin(passportLocalMongoose);
+
+//listings
+const listingSchema = new mongoose.Schema({
     userName: String,
     photoUrl: String,
+    phoneNumber: String,
+    constituency: String,
     propertyName: String,
     propertyDescription: String,
     longitude: Number,
     latitude: Number
 });
 
-//db model
-const User = mongoose.model("user", userSchema);
+//db models
+const User = mongoose.model("User", userSchema);
+const Listing = mongoose.model("Listing", listingSchema);
 
 //connect db
 const URI = "mongodb://127.0.0.1:27017/"; // local mongoDB uri
@@ -24,8 +36,6 @@ async function connectDb() {
     try {
         await mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, dbName: dbName });
         console.log("Connection to mongodb local host successful.");
-        //close connection after test
-        //mongoose.connection.close();
     } catch (err) {
         console.log(err);
     }
@@ -38,6 +48,7 @@ function closeConnection() {
 //module exports
 module.exports = {
     User: User,
+    Listing: Listing,
     connectDb: connectDb,
     closeConnection: closeConnection
 }

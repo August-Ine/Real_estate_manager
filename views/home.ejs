@@ -1,40 +1,105 @@
 <%- include('partials/header') %>
+    <%- include('partials/nav') %>
+        <!-- <% %> <%= %> -->
 
-    <div class="container">
-        <div class="centered">
-            <h1>Real estate in Kamukunji</h1>
+        <div class="fill" style="display:grid; align-items: center;">
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <h1 class="text-center">Real estate in Kamukunji</h1>
+                </div>
+                <% if (req.user.isAdmin){ %>
+                    <button onclick="window.location.href='/create-listing/'"
+                        class="btn btn-primary text-warning">Create listing(admin)</button>
+                    <% } %>
+            </div>
+            <div class="row d-flex justify-content-around" style="width:80%; height: 100%; margin:auto">
+                <div class="col-6 d-flex align-items-center justify-content-center" class="mx:auto">
+                    <div id="map" style="width: 100%; height:100%"></div>
+                </div>
+                <div class="col-4 scrollable-container">
+                    <div class="scrollable-content">
+                        <% listings.forEach(listing=> { %>
+                            <div class="card mb-4" style="width: 15rem; margin: auto">
+                                <img class="card-img-top" src="images/<%= listing.photoUrl %>" alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <%= listing.propertyName %>
+                                    </h5>
+                                    <div class="justify-content-between">
+                                        <button class="btn btn-primary btn-sm"
+                                            onclick="window.location.href='/detail/<%= listing.id %>'">
+                                            Explore listing
+                                        </button>
+                                        <% if (req.user.isAdmin) { %>
+                                            <button class="btn btn-primary btn-sm text-warning"
+                                                onclick="window.location.href='/update-listing/<%= listing.id %>'">
+                                                Edit(Admin)
+                                            </button>
+                                            <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <div id="map" style="width:1000px;height:700px;"></div>
-    </div>
 
-    <script>
-        function initMap() {
-            const map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: -1.2747, lng: 36.8597 }, // Set the initial center of the map
-                zoom: 13 // Set the initial zoom level of the map
-            });
-
-
-            // Create an array to store the markers
-            const markers = [];
-
-            // Iterate over the coordinates and create markers on the map
-            <% coordinates.forEach((coordinate) => { %>
-                var marker = new google.maps.Marker({
-                position: { lat: <%= coordinate.latitude %>, lng: <%= coordinate.longitude %> },
-                map: map
-            });
-                // Add click event listener to each marker
-                marker.addListener('click', () => {
-                    // Redirect to a detail route when marker is clicked
-                    window.location.href = '/detail/<%= coordinate._id %>';
+        <script>
+            function initMap() {
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: -1.2747, lng: 36.8597 }, // Set the initial center of the map
+                    zoom: 13 // Set the initial zoom level of the map
                 });
 
-                // Add the marker to the markers array
-                markers.push(marker);
+
+                // Create an array to store the markers
+                const markers = [];
+
+            // Iterate over the listing.s and create markers on the map
+            <% listings.forEach(listing => { %>
+                var marker = new google.maps.Marker({
+                    position: { lat: <%= listing.latitude %>, lng: <%= listing.longitude %> },
+                    map: map
+                });
+                    // const contentString = "<h5><%= listing.propertyName %></h5>"
+
+                    // const infowindow = new google.maps.InfoWindow({
+                    //     content: contentString
+                    // });
+                    // marker.addListener("click", () => {
+                    //     infowindow.open({
+                    //         anchor: marker,
+                    //         map,
+                    //     });
+                    // });
+                    // marker.addListener('mouseout', () => {
+                    //     // Close the InfoWindow
+                    //     infoWindow.close();
+                    // });
+
+                    // Add click event listener to each marker
+                    marker.addListener('click', () => {
+                        // Redirect to a detail route when marker is clicked
+                        window.location.href = '/detail/<%= listing.id %>';
+                    });
+
+
+                    // // Attach event listeners to the marker
+                    // marker.addListener('mouseover', () => {
+                    //     // Set the content of the InfoWindow
+                    //     infoWindow.setContent('<%= listing.propertyName %>');
+
+                    //     // Open the InfoWindow
+                    //     infoWindow.open(map, marker);
+                    // });
+
+                    // Add the marker to the markers array
+                    markers.push(marker);
             <% }); %>
         }
-    </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= mapsKey %>&callback=initMap"></script>
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= mapsKey %>&callback=initMap"></script>
 
-    <%- include('partials/footer') %>
+        <%- include('partials/footer') %>

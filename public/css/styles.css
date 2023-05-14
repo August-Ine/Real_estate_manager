@@ -1,5 +1,15 @@
 body {
     background-color: #E8ECEF;
+    height: 100vh;
+}
+
+.btn {
+    font-size: 18px;
+}
+
+.card-img-top {
+    width: 240px;
+    height: 150px;
 }
 
 .centered {
@@ -7,11 +17,9 @@ body {
     text-align: center;
 }
 
-.container {
-    display: grid;
-    place-items: center;
+.container-fluid {
+    margin-top: 100px;
     height: 100vh;
-    /* Adjust the height as needed */
 }
 
 .centered-div {
@@ -20,4 +28,26 @@ body {
     align-items: center;
     height: 100vh;
     text-align: center;
+}
+
+.fill {
+    width: 90%;
+}
+
+.forms {
+    width: 100%;
+}
+
+.image-border {
+    border: 1px solid #000;
+    width: 400px;
+    height: 400px;
+}
+
+
+.scrollable-container {
+    max-height: 700px;
+    /* Adjust the desired maximum height */
+    overflow-y: scroll;
+    /* Enable vertical scrolling */
 }

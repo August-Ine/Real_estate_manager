@@ -1,44 +1,55 @@
 <%- include('partials/header') %>
-    <!-- <%= %> -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 centered" style="text-align: center;">
-                <h1>
-                    <%= selectedLocation.propertyName %>
-                </h1>
+    <%- include('partials/nav') %>
+        <!-- <%= %> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 centered" style="text-align: center;">
+                    <h1>
+                        <%= selectedLocation.propertyName %>
+                    </h1>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6">
-                <div id="map" style="width:500px;height:500px;"></div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card" style="width: 25rem;">
-                    <img src="/<%= selectedLocation.photoUrl %>" class="card-img-top" alt="image of location">
-                    <div class="card-body">
-                        <p class="card-text">
-                            <%= selectedLocation.propertyDescription %>
-                        </p>
-                        <a href="/" class="btn btn-primary">Back to Kamukunji map</a>
+            <div class="row mt-5">
+                <div class="col-lg-8">
+                    <div id="map" style="width:650px;height:650px;"></div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="scrollable-container">
+                        <div class="card mx-auto" style="width: 25rem; height: 450px;">
+                            <img src="images/<%= selectedLocation.photoUrl %>" class="card-img-top"
+                                alt="image of location">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <%= selectedLocation.propertyDescription %>
+                                </p>
+                                <p class="card-text">
+                                    Constituency: <%= selectedLocation.constituency %>
+                                </p>
+                                <p class="card-text">
+                                    Phone Number: <%= selectedLocation.phoneNumber %>
+                                </p>
+                                <a href="/home" class="btn btn-primary btn-lg mx-auto d-block">Back to listings</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <script>
+                function initMap() {
+                    const map = new google.maps.Map(document.getElementById('map'), {
+                        center: { lat: <%= selectedLocation.latitude %>, lng: <%= selectedLocation.longitude %> }, // Set the initial center of the map
+                        zoom: 20 // Set the initial zoom level of the map
+                    });
+
+                    new google.maps.Marker({
+                        position: { lat: <%= selectedLocation.latitude %>, lng: <%= selectedLocation.longitude %> },
+                        map: map
+                    });
+                }
+            </script>
+            <script async defer
+                src="https://maps.googleapis.com/maps/api/js?key=<%= mapsKey %>&callback=initMap"></script>
         </div>
-        <script>
-            function initMap() {
-                const map = new google.maps.Map(document.getElementById('map'), {
-                    center: { lat: <%= selectedLocation.latitude %>, lng: <%= selectedLocation.longitude %> }, // Set the initial center of the map
-                    zoom: 20 // Set the initial zoom level of the map
-                });
-
-                new google.maps.Marker({
-                    position: { lat: <%= selectedLocation.latitude %>, lng: <%= selectedLocation.longitude %> },
-                    map: map
-                });
-            }
-        </script>
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= mapsKey %>&callback=initMap"></script>
-    </div>
 
 
-    <%- include('partials/footer') %>
+        <%- include('partials/footer') %>

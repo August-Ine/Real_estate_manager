@@ -1,0 +1,16 @@
+<%- include('partials/header') %>
+    <%- include('partials/nav') %>
+        <h1>Listing Created Successfully</h1>
+        <img src="<%= listing.photoUrl %>" alt="">
+        <p>Property Phone number: <%= listing.phoneNumber %>
+        </p>
+        <p>Property name: <%= listing.propertyName %>
+        </p>
+        <p>Property Description: <%= listing.propertyDescription %>
+        </p>
+        <p>Latitude: <%= listing.latitude %>
+        </p>
+        <p>Longitude: <%= listing.longitude %>
+        </p>
+        <!-- Other listing properties... -->
+        <%- include('partials/footer') %>
