@@ -14,7 +14,10 @@ userSchema.plugin(passportLocalMongoose);
 
 //listings
 const listingSchema = new mongoose.Schema({
-    userName: String,
+    userName: {
+        type: String,
+        unique: true
+    },
     photoUrl: String,
     phoneNumber: String,
     constituency: String,

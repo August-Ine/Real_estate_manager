@@ -78,7 +78,7 @@ var listingsCache = [];
 
 async function getListings() {
     //attempt to retrieve from cache
-    if (listingsCache.length !== 0) { return listingsCache }
+    // if (listingsCache.length !== 0) { return listingsCache }
 
     // Retrieve listings from the database
     try {
@@ -183,26 +183,27 @@ app.get('/detail/:locationId', isLoggedIn, async (req, res) => {
     // Access the parameter value using req.params
     const locationId = req.params.locationId;
 
-    //used listingsCache to retrieve location info
-    if (listingsCache.length !== 0) {
-        const selectedLocation = listingsCache.find(coordinate => coordinate._id == locationId);
-        res.render('detail', { selectedLocation: selectedLocation, mapsKey: mapsKey }); // Pass the location data to the template
-    }
+    // //used listingsCache to retrieve location info
+    // if (listingsCache.length !== 0) {
+    //     const selectedLocation = listingsCache.find(coordinate => coordinate._id == locationId);
+    //     res.render('detail', { selectedLocation: selectedLocation, mapsKey: mapsKey }); // Pass the location data to the template
+    // }
 
-    //no cache, fetch from db
-    else {
-        await users.Listing.findById(locationId)
-            .then((foundLocation) => {
-                if (!foundLocation) {
-                    return res.status(404).json({ error: 'Location not found' });
-                }
-                res.render('detail', { selectedLocation: foundLocation, mapsKey: mapsKey }); // Pass the location data to the template
-                listingsCache.push(foundLocation); //cache results
-            })
-            .catch((error) => {
-                res.status(500).json({ error: 'Server error' });
-            });
-    }
+    // //no cache, fetch from db
+    // else {
+
+    // }    
+    await users.Listing.findById(locationId)
+        .then((foundLocation) => {
+            if (!foundLocation) {
+                return res.status(404).json({ error: 'Location not found' });
+            }
+            res.render('detail', { selectedLocation: foundLocation, mapsKey: mapsKey }); // Pass the location data to the template
+            listingsCache.push(foundLocation); //cache results
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'Server error' });
+        });
 });
 
 app.get("/logout", isLoggedIn, function (req, res, next) {
@@ -214,10 +215,25 @@ app.get("/logout", isLoggedIn, function (req, res, next) {
 
 //admin
 app.get('/create-listing', isLoggedIn, (req, res) => {
-    res.render('create-listing', { mapsKey: mapsKey });
+    res.render('create-listing', { message: null, mapsKey: mapsKey });
 });
 
-app.post('/submit', isLoggedIn, upload.single('image'), async (req, res) => {
+app.post('/create-listing', isLoggedIn, upload.single('image'), async (req, res) => {
+    // //username unique?
+    // const submittedUsername = req.body.username;
+    // Listing.findOne({ userName: submittedUsername }, (err, existingListing) => {
+    //     if (err) {
+    //         // Handle the error
+    //     } else if (existingListing) {
+    //         // A listing with the same username already exists
+    //         // Handle the validation error and display an error message to the user
+
+    //     } else {
+    //         // The username is unique, proceed with saving the form data
+    //     }
+    // });
+
+
     //image url
     // Check if an image file was uploaded
     if (!req.file) {
@@ -257,6 +273,10 @@ app.post('/submit', isLoggedIn, upload.single('image'), async (req, res) => {
 
         res.render("success", { listing: savedListing });
     } catch (error) {
+        if (error.code === 11000) {
+            // Username is already taken
+            return res.render('create-listing', { message: 'Username is already taken' });
+        }
         res.status(500).json({ error: 'Failed to create listing' });
     }
 });
@@ -268,7 +288,7 @@ app.get("/update-listing/:listing_id", isLoggedIn, async (req, res) => {
             if (!foundLocation) {
                 return res.status(404).json({ error: 'Location not found' });
             }
-            res.render('update-listing', { listing: foundLocation, mapsKey: mapsKey }); // Pass the location data to the template
+            res.render('update-listing', { message: null, listing: foundLocation, mapsKey: mapsKey }); // Pass the location data to the template
             // listingsCache.push(foundLocation); //cache results
         })
         .catch((error) => {
@@ -280,13 +300,14 @@ app.get("/update-listing/:listing_id", isLoggedIn, async (req, res) => {
 app.post('/update-listing/:listing_id', isLoggedIn, upload.single('image'), async (req, res) => {
     const listing_id = req.params.listing_id;
     const updatedListing = {
-        userName: req.body.userName,
+        username: req.body.userName,
+        photoUrl: '',
         phoneNumber: req.body.phoneNumber,
         constituency: req.body.constituency,
         propertyName: req.body.propertyName,
         propertyDescription: req.body.propertyDescription,
-        longitude: req.body.longitude,
-        latitude: req.body.latitude
+        longitude: Number(req.body.longitude),
+        latitude: Number(req.body.latitude)
     };
 
     try {
@@ -297,14 +318,32 @@ app.post('/update-listing/:listing_id', isLoggedIn, upload.single('image'), asyn
         // Check if an image file was uploaded
         if (!req.file) {
             updatedListing.photoUrl = listing.photoUrl;//keep old photoUrl
+            // Update the listing with the updated values
+            listing.set(updatedListing);
+            await listing.save();
+
+            res.redirect('/home'); // Redirect to a page displaying all listings
+        } else {
+            console.log(!req.file);
+            // Access the uploaded image using req.file
+            const uploadedFile = req.file;
+
+            // Get the file extension
+            const fileExtension = path.extname(uploadedFile.originalname);
+            updatedListing.photoUrl = 'image' + '_' + req.body.userName + fileExtension;
+
+            // Update the listing with the updated values
+            listing.set(updatedListing);
+            await listing.save();
+
+            res.redirect('/home'); // Redirect to a page displaying all listings
         }
 
-        // Update the listing with the updated values
-        listing.set(updatedListing);
-        await listing.save();
-
-        res.redirect('/home'); // Redirect to a page displaying all listings
     } catch (error) {
+        if (error.code === 11000) {
+            // Username is already taken
+            return res.render('update-listing', { message: 'Username is already taken' });
+        }
         console.error(error);
         res.status(500).send('Internal Server Error');
     }

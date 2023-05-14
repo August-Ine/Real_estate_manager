@@ -7,40 +7,41 @@
                 <div class="col-8">
                     <h1 class="text-center">Real estate in Kamukunji</h1>
                 </div>
-                <% if (req.user.isAdmin){ %>
-                    <button onclick="window.location.href='/create-listing/'"
-                        class="btn btn-primary text-warning">Create listing(admin)</button>
-                    <% } %>
             </div>
             <div class="row d-flex justify-content-around" style="width:80%; height: 100%; margin:auto">
                 <div class="col-6 d-flex align-items-center justify-content-center" class="mx:auto">
                     <div id="map" style="width: 100%; height:100%"></div>
                 </div>
                 <div class="col-4 scrollable-container">
-                    <div class="scrollable-content">
-                        <% listings.forEach(listing=> { %>
-                            <div class="card mb-4" style="width: 15rem; margin: auto">
-                                <img class="card-img-top" src="images/<%= listing.photoUrl %>" alt="Card image cap">
-                                <div class="card-body">
-                                    <h5 class="card-title">
-                                        <%= listing.propertyName %>
-                                    </h5>
-                                    <div class="justify-content-between">
-                                        <button class="btn btn-primary btn-sm"
-                                            onclick="window.location.href='/detail/<%= listing.id %>'">
-                                            Explore listing
-                                        </button>
-                                        <% if (req.user.isAdmin) { %>
-                                            <button class="btn btn-primary btn-sm text-warning"
-                                                onclick="window.location.href='/update-listing/<%= listing.id %>'">
-                                                Edit(Admin)
-                                            </button>
-                                            <% } %>
+                    <% if (req.user.isAdmin){ %>
+                        <button onclick="window.location.href='/create-listing/'" class="btn btn-primary text-warning"
+                            style="margin: auto">Create listing(admin)</button>
+                        <% } %>
+                            <div class="scrollable-content">
+                                <% listings.forEach(listing=> { %>
+                                    <div class="card mb-4" style="width: 15rem; margin: auto">
+                                        <img class="card-img-top" src="/images/<%= listing.photoUrl %>"
+                                            alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <%= listing.propertyName %>
+                                            </h5>
+                                            <div class="justify-content-between">
+                                                <button class="btn btn-primary btn-sm"
+                                                    onclick="window.location.href='/detail/<%= listing.id %>'">
+                                                    Explore listing
+                                                </button>
+                                                <% if (req.user.isAdmin) { %>
+                                                    <button class="btn btn-primary btn-sm text-warning"
+                                                        onclick="window.location.href='/update-listing/<%= listing.id %>'">
+                                                        Edit(Admin)
+                                                    </button>
+                                                    <% } %>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
+                                    <% }) %>
                             </div>
-                            <% }) %>
-                    </div>
                 </div>
             </div>
 
