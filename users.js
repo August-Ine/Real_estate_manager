@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const passportLocalMongoose = require('passport-local-mongoose');
 
 //constants
-const dbName = "realestatedb";
+const dbName = "realestatedb2";
 
 //db schema
 //users
