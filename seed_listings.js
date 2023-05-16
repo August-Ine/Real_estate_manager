@@ -6,7 +6,7 @@ async function seedListings() {
     const numCoordinates = 12; // Specify the number of coordinates you want to generate
 
     for (let i = 0; i < numCoordinates; i++) {
-        const username = faker.internet.userName();
+        const userName = faker.internet.userName();
         // const latitude = faker.address.latitude({
         //     min: -1.2845,
         //     max: -1.2644
@@ -34,14 +34,11 @@ async function seedListings() {
 
 
         // Create and save the coordinate in the database
-        const coordinate = new Users.Listing({ username, photoUrl, phoneNumber, constituency: 'Kamukunji', latitude, longitude, propertyName, propertyDescription });
+        const coordinate = new Users.Listing({ userName, photoUrl, phoneNumber, constituency: 'Kamukunji', latitude, longitude, propertyName, propertyDescription });
         await coordinate.save();
     }
 
     console.log('Seed data created successfully');
-
-    // Close the MongoDB connection
-    mongoose.connection.close();
 }
 
 // export seedCoordinates function

@@ -288,13 +288,24 @@ app.post('/update-listing/:listing_id', isLoggedIn, upload.single('image'), asyn
         // Check if an image file was uploaded
         if (!req.file) {
             updatedListing.photoUrl = listing.photoUrl;//keep old photoUrl
+            // Update the listing with the updated values
+            listing.set(updatedListing);
+            await listing.save();
+            res.redirect('/home'); // Redirect to a page displaying all listings
+        } else {
+            // Access the uploaded image using req.file
+            const uploadedFile = req.file;
+
+            // Get the file extension
+            const fileExtension = path.extname(uploadedFile.originalname);
+            const photoUrl = 'image' + '_' + req.body.userName + fileExtension;
+            updatedListing.photoUrl = photoUrl;
+            listing.set(updatedListing);
+            await listing.save();
+            res.redirect('/home'); // Redirect to a page displaying all listings
         }
 
-        // Update the listing with the updated values
-        listing.set(updatedListing);
-        await listing.save();
 
-        res.redirect('/home'); // Redirect to a page displaying all listings
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
