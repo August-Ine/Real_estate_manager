@@ -1,4 +1,5 @@
-const path = require("path")
+const path = require("path");
+const fs = require('fs');
 const express = require("express");
 const session = require('express-session');
 const passport = require('passport');
@@ -307,6 +308,37 @@ app.post('/update-listing/:listing_id', isLoggedIn, upload.single('image'), asyn
     } catch (error) {
         console.error(error);
         res.status(500).send('Internal Server Error');
+    }
+});
+
+//delete a listing
+app.post("/delete-listing", isLoggedIn, async (req, res) => {
+    const listing_id = req.body.listingId;
+    const listing = await users.Listing.findById(listing_id);
+
+    if (listing) {
+        try {
+            //delete listing image from images
+            const imagePath = path.join(__dirname, '/images/' + listing.photoUrl);
+
+            fs.unlink(imagePath, (err) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+
+                console.log('Image file deleted successfully');
+            });
+
+            // Delete the entity
+            await listing.remove(); // or entity.deleteOne()
+            res.redirect('/home'); // Redirect to a relevant page after deletion
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Error deleting entity');
+        }
+    } else {
+        console.log('Entity not found');
     }
 });
 

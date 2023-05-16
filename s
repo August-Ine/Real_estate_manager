@@ -1,0 +1,45 @@
+[33mcommit 943c9fe5bc316aa7f477e2cead0dcfdafd91da71[m[33m ([m[1;36mHEAD[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mbrokenbgood[m[33m)[m
+Author: august269 <akirui95@gmail.com>
+Date:   Sun May 14 20:08:19 2023 +0300
+
+    fix detail page image
+
+[33mcommit 18c48555c7ffee968e9a16524c6614bc3ec107d6[m
+Author: august269 <akirui95@gmail.com>
+Date:   Thu May 11 13:47:20 2023 +0300
+
+    update readme
+
+[33mcommit 0f9429a9d740399a47e5ed0a0674f580221a06a6[m
+Author: august269 <akirui95@gmail.com>
+Date:   Thu May 11 13:45:25 2023 +0300
+
+    update readme
+
+[33mcommit 23273957abc4a8ebd6b75a0af50d913b6c34cbf2[m
+Author: august269 <akirui95@gmail.com>
+Date:   Thu May 11 11:30:32 2023 +0300
+
+    update readme
+
+[33mcommit 5b54527d764e4825c58c5a24cbbbc933d31bf5cc[m
+Author: august269 <akirui95@gmail.com>
+Date:   Thu May 11 11:24:43 2023 +0300
+
+    finalised main feature
+    
+    pending: form to update descriptions
+
+[33mcommit 19f32934d8b29f0ea3ef4e0370489f1860ff4c55[m
+Author: august269 <akirui95@gmail.com>
+Date:   Wed May 10 11:53:56 2023 +0300
+
+    seed data, add ejs template
+    
+    await googlemaps api key
+
+[33mcommit 825822662cab815f19912c4a4075bbb4a448bc61[m
+Author: august269 <akirui95@gmail.com>
+Date:   Wed May 10 10:27:28 2023 +0300
+
+    initial commit

@@ -1,20 +1,37 @@
 <%- include('partials/header') %>
     <%- include('partials/nav') %>
         <div class="container px-6">
-            <h2>Update listing: <%= listing.propertyName %>
+            <h2 class="text-center">Update listing: <%= listing.propertyName %>
             </h2>
             <div class="row justify-content-center">
                 <div class="col-6">
-                    <form class="forms" action="/update/<%= listing._id %>" method="POST" enctype="multipart/form-data">
+                    <form id="deleteForm" method="POST" action="/delete-listing">
+                        <input type="hidden" name="listingId" value="<%= listing._id %>">
+                        <button class="btn btn-danger btn-lg" type="button" onclick="confirmDelete()">Delete
+                            listing</button>
+                    </form>
+
+                    <script>
+                        function confirmDelete() {
+                            if (confirm('Are you sure you want to permanently delete this listing?')) {
+                                document.getElementById('deleteForm').submit();
+                            }
+                        }
+                    </script>
+
+                    <form class="forms" action="/update-listing/<%= listing._id %>" method="POST"
+                        enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="userName" class="form-label">Property username: </label>
                             <input type="text" class="form-control" id="userName" name="userName"
-                                placeholder="<%= listing.userName %>" required>
+                                value="<%= listing.userName %>" required>
                         </div>
                         <div class="form-group">
                             <label for="photoUrl" class="form-label">Photo:</label>
-                            <img class="image-border" id="photoUrl" src="/<%= listing.photoUrl %>"
-                                alt="photo of listing">
+                            <div class="image-border" style="width:450px; height:450px"><img id="photoUrl"
+                                    style="width:100%; height:100%" src="/images/<%= listing.photoUrl %>"
+                                    alt="photo of listing">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="phoneNumber" class="form-label">Phone Number:</label>
@@ -42,7 +59,8 @@
                             <input type="file" name="image" id="image" accept="image/*" class="form-control-file">
                         </div>
                         <div class="form-group">
-                            <div id="map" style="width: 400px; height: 400px;"></div>
+                            <h5 class="text-center">Move the pin to assign coordinates</h5>
+                            <div id="map" style="width: 600px; height: 500px;"></div>
                         </div>
 
                         <div class="form-group">
