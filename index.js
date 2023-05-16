@@ -175,25 +175,23 @@ app.get('/detail/:locationId', isLoggedIn, async (req, res) => {
     const locationId = req.params.locationId;
 
     //used listingsCache to retrieve location info
-    if (listingsCache.length !== 0) {
-        const selectedLocation = listingsCache.find(coordinate => coordinate._id == locationId);
-        res.render('detail', { selectedLocation: selectedLocation, mapsKey: mapsKey }); // Pass the location data to the template
-    }
+    // if (listingsCache.length !== 0) {
+    //     const selectedLocation = listingsCache.find(coordinate => coordinate._id == locationId);
+    //     res.render('detail', { selectedLocation: selectedLocation, mapsKey: mapsKey }); // Pass the location data to the template
+    // }
 
     //no cache, fetch from db
-    else {
-        await users.Listing.findById(locationId)
-            .then((foundLocation) => {
-                if (!foundLocation) {
-                    return res.status(404).json({ error: 'Location not found' });
-                }
-                res.render('detail', { selectedLocation: foundLocation, mapsKey: mapsKey }); // Pass the location data to the template
-                listingsCache.push(foundLocation); //cache results
-            })
-            .catch((error) => {
-                res.status(500).json({ error: 'Server error' });
-            });
-    }
+    await users.Listing.findById(locationId)
+        .then((foundLocation) => {
+            if (!foundLocation) {
+                return res.status(404).json({ error: 'Location not found' });
+            }
+            res.render('detail', { selectedLocation: foundLocation, mapsKey: mapsKey }); // Pass the location data to the template
+            // listingsCache.push(foundLocation); //cache results
+        })
+        .catch((error) => {
+            res.status(500).json({ error: 'Server error' });
+        });
 });
 
 app.get("/logout", isLoggedIn, function (req, res, next) {
@@ -208,7 +206,7 @@ app.get('/create-listing', isLoggedIn, (req, res) => {
     res.render('create-listing', { mapsKey: mapsKey });
 });
 
-app.post('/submit', isLoggedIn, upload.single('image'), async (req, res) => {
+app.post('/create-listing', isLoggedIn, upload.single('image'), async (req, res) => {
     //image url
     // Check if an image file was uploaded
     if (!req.file) {
@@ -244,7 +242,7 @@ app.post('/submit', isLoggedIn, upload.single('image'), async (req, res) => {
         // Save the new listing to the database
         const savedListing = await newListing.save();
         //add to cache
-        listingsCache.push(newListing);
+        // listingsCache.push(newListing);
 
         res.render("success", { listing: savedListing });
     } catch (error) {
