@@ -74,13 +74,7 @@ async function seedData() {
 }
 seedData();
 
-//cached listings
-var listingsCache = [];
-
 async function getListings() {
-    //attempt to retrieve from cache
-    if (listingsCache.length !== 0) { return listingsCache }
-
     // Retrieve listings from the database
     try {
         const listings = await users.Listing.find({});
@@ -162,10 +156,6 @@ app.get("/home", isLoggedIn, async (req, res) => {
         const listings = await getListings();
 
         if (listings) {
-            if (listingsCache.length !== listings.length) {
-                //cache results
-                listingsCache = [...listings];
-            }
             // Render the EJS template and pass the listings
             res.render('home', { listings: listings, mapsKey: mapsKey, req: req });
 
@@ -319,7 +309,7 @@ app.post("/delete-listing", isLoggedIn, async (req, res) => {
     if (listing) {
         try {
             //delete listing image from images
-            const imagePath = path.join(__dirname, '/images/' + listing.photoUrl);
+            const imagePath = path.join(__dirname, 'public/images/' + listing.photoUrl);
 
             fs.unlink(imagePath, (err) => {
                 if (err) {
@@ -331,7 +321,7 @@ app.post("/delete-listing", isLoggedIn, async (req, res) => {
             });
 
             // Delete the entity
-            await listing.remove(); // or entity.deleteOne()
+            await listing.deleteOne(); // or entity.deleteOne()
             res.redirect('/home'); // Redirect to a relevant page after deletion
         } catch (err) {
             console.error(err);
@@ -341,9 +331,6 @@ app.post("/delete-listing", isLoggedIn, async (req, res) => {
         console.log('Entity not found');
     }
 });
-
-
-
 
 //serve web page
 app.listen(3000, () => {
