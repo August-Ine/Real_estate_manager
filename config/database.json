@@ -1,0 +1,13 @@
+{
+  "development": {
+    "username": "<YOUR_USERNAME>",
+    "password": "<YOUR_PASSWORD>",
+    "database": "<YOUR_DATABASE_NAME>",
+    "host": "<YOUR_HOSTNAME>",
+    "port": <YOUR_PORT>,
+    "dialect": "postgres"
+  },
+  "production": {
+    // Production database configuration
+  }
+}

@@ -12,11 +12,13 @@ require('dotenv').config();
 const flash = require('connect-flash');
 const multer = require('multer');
 const saveimage = require('./saveimage');
+const GeoJSONModel = require('./geoJson');
 
 //create app
 const app = express();
 //connect to db
 users.connectDb();
+GeoJSONModel.connectDb();
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -341,7 +343,75 @@ app.post("/delete-listing", isLoggedIn, async (req, res) => {
     }
 });
 
+//handle geojson upload
+app.get('/upload-geo', (req, res) => {
+    res.render('upload-geo-json');
+});
+
+app.post('/upload-geo', upload.single('file'), async (req, res) => {
+    try {
+        const file = req.file;
+        const filePath = file.path;
+
+        // Read the uploaded file
+        const geojsonData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+        // Save the GeoJSON data to MongoDB
+        await saveGeoJSONToMongoDB(geojsonData);
+
+        // Delete the uploaded file from the server
+        fs.unlinkSync(filePath);
+
+        res.render('upload-geo-success', { entry: geojsonData });
+    } catch (error) {
+        console.error('Error uploading GeoJSON file:', error);
+        res.status(500).json({ error: 'Error uploading GeoJSON file.' });
+    }
+});
+
+async function saveGeoJSONToMongoDB(geoJSONData) {
+    // Create a new instance of GeoJSONModel
+    const geoJSONInstance = new GeoJSONModel.GeoJSONModel({
+        type: geoJSONData.type,
+        features: geoJSONData.features
+    });
+
+    // Save the GeoJSON data to the database
+    await geoJSONInstance.save();
+}
+
+
+//browse geojsons
+app.get('/geo-entries', async (req, res) => {
+    try {
+        // Assuming you have a Mongoose model called 'Entry' for your GeoJSON entries
+        const entries = await GeoJSONModel.GeoJSONModel.find({});
+
+        res.render('browse-geojson', { entries });
+    } catch (error) {
+        console.error('Error retrieving GeoJSON entries:', error);
+        res.status(500).json({ error: 'Error retrieving GeoJSON entries' });
+    }
+});
+
+app.get('/geo-entry/:id', async (req, res) => {
+    const entryId = req.params.id;
+    try {
+        // Assuming you have a Mongoose model called 'Entry' for your GeoJSON entries
+        const entry = await GeoJSONModel.GeoJSONModel.findById(entryId);
+        const geojson = JSON.stringify(entry);
+
+        res.render('viewgeojson', { geoJSONData: geojson, mapsKey: mapsKey });
+    } catch (error) {
+        console.error('Error retrieving GeoJSON entry:', error);
+        res.status(500).json({ error: 'Error retrieving GeoJSON entry' });
+    }
+});
+
+
 //serve web page
 app.listen(3000, () => {
     console.log('Server listening on port 3000');
 });
+
+

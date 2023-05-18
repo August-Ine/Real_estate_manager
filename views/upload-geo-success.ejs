@@ -1,0 +1,17 @@
+<%- include('partials/header') %>
+    <%- include('partials/nav') %>
+        <h1>Success!</h1>
+        <p>The GeoJSON entry has been created with the following details:</p>
+
+        <ul>
+            <li><strong>Name:</strong>
+                <%= entry.properties.name %>
+            </li>
+            <li><strong>Latitude:</strong>
+                <%= entry.geometry.coordinates[1] %>
+            </li>
+            <li><strong>Longitude:</strong>
+                <%= entry.geometry.coordinates[0] %>
+            </li>
+        </ul>
+        <%- include('partials/footer') %>

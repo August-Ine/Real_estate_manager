@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+    <%- include('partials/nav') %>
+
+        <body>
+            <style>
+                .card {
+                    width: 300px;
+                    margin: 10px;
+                    padding: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                }
+            </style>
+            <h5>GeoJSON Entries</h5>
+
+            <% entries.forEach(entry=> { %>
+                <div class="card">
+                    <h2>
+                        Id: <%= entry.features[0].properties.THEID %>
+                    </h2>
+                    <p>Shape_Area: <%= entry.features[0].properties.Shape_Area %>
+                    </p>
+                    <p>Shape_Length: <%= entry.features[0].properties.Shape_Length %>
+                    </p>
+                    <button class="btn btn-md btn-primary"
+                        onclick="window.location.href='/geo-entry/<%= entry._id %>'">View map</button>
+                </div>
+                <% }); %>
+                    <%- include('partials/footer') %>

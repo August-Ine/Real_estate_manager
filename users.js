@@ -35,7 +35,7 @@ async function connectDb() {
     //connect to db, create db if doesnt exist
     try {
         await mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, dbName: dbName });
-        console.log("Connection to mongodb local host successful.");
+        console.log("Connection to listing local host successful.");
     } catch (err) {
         console.log(err);
     }

@@ -1,0 +1,41 @@
+<%- include('partials/header') %>
+    <%- include('partials/nav') %>
+        <div id="map" style="width: 600px; height: 600px;"></div>
+        <script>
+            function initMap() {
+
+
+                // Create a new map instance
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: -1.262442050460209, lng: 36.87450842892093 },
+                    zoom: 13
+                });
+
+                // Create a new GeoJSON layer for adding the GeoJSON data
+                const geoJsonLayer = new google.maps.Data({ map: map });
+
+                // Add the GeoJSON data to the layer
+                geoJsonLayer.loadGeoJson('https://raw.githubusercontent.com/August269/geojson/main/kamukunji-constituency.gdb.geojson');
+                geoJsonLayer.setMap(map);
+
+                // Style the GeoJSON features
+                geoJsonLayer.setStyle({
+                    fillColor: 'blue',
+                    strokeWeight: 1
+                });
+            }
+
+            // Load the Google Maps API asynchronously
+            function loadMapScript() {
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=<%= mapsKey %>&callback=initMap`;
+                script.defer = true;
+                script.async = true;
+                document.body.appendChild(script);
+            }
+
+            // Call the function to load the Google Maps API and initialize the map
+            loadMapScript();
+        </script>
+
+        <%- include('partials/footer') %>

@@ -1,0 +1,11 @@
+<%- include('partials/header') %>
+    <%- include('partials/nav') %>
+
+        <form action="/upload-geo" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="fileInput" class="form-label">Select GeoJSON File:</label>
+                <input type="file" class="form-control" id="fileInput" name="file" accept=".geojson" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+        <%- include('partials/footer') %>

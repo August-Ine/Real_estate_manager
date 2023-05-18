@@ -17,7 +17,11 @@
                         <% if (req.user.isAdmin){ %>
                             <button onclick="window.location.href='/create-listing/'"
                                 class="btn btn-primary text-warning">Create listing(admin)</button>
+                            <button onclick="window.location.href='/upload-geo/'"
+                                class="btn btn-primary text-warning">Upload geo-json layer(admin)</button>
                             <% } %>
+                                <button onclick="window.location.href='/geo-entries/'" class="btn btn-primary ">Map
+                                    layers</button>
                                 <% listings.forEach(listing=> { %>
                                     <div class="card mb-4" style="width: 15rem; margin: auto">
                                         <img class="card-img-top" src="/images/<%= listing.photoUrl %>"
@@ -54,7 +58,10 @@
                     zoom: 13 // Set the initial zoom level of the map
                 });
 
-
+                // Create a new GeoJSON layer for adding the GeoJSON data
+                const geoJsonLayer = new google.maps.Data({ map: map });
+                geoJsonLayer.loadGeoJson('https://raw.githubusercontent.com/August269/geojson/main/kamukunji-constituency.gdb.geojson');
+                geoJsonLayer.setMap(map);
                 // Create an array to store the markers
                 const markers = [];
 
