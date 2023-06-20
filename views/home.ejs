@@ -71,21 +71,20 @@
                     position: { lat: <%= listing.latitude %>, lng: <%= listing.longitude %> },
                     map: map
                 });
-                    // const contentString = "<h5><%= listing.propertyName %></h5>"
 
-                    // const infowindow = new google.maps.InfoWindow({
-                    //     content: contentString
-                    // });
-                    // marker.addListener("click", () => {
-                    //     infowindow.open({
-                    //         anchor: marker,
-                    //         map,
-                    //     });
-                    // });
-                    // marker.addListener('mouseout', () => {
-                    //     // Close the InfoWindow
-                    //     infoWindow.close();
-                    // });
+                    var infowindow = new google.maps.InfoWindow({
+                        content: "<%= listing.propertyName %>"
+                    });
+                    marker.addListener("mouseover", () => {
+                        infowindow.open({
+                            anchor: marker,
+                            map,
+                        });
+                    });
+                    marker.addListener('mouseout', () => {
+                        // Close the InfoWindow
+                        infoWindow.close();
+                    });
 
                     // Add click event listener to each marker
                     marker.addListener('click', () => {
@@ -105,6 +104,7 @@
 
                     // Add the marker to the markers array
                     markers.push(marker);
+                
             <% }); %>
         }
         </script>

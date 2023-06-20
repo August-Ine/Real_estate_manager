@@ -11,19 +11,14 @@
                     border-radius: 5px;
                 }
             </style>
-            <h5>GeoJSON Entries</h5>
+            <h5 class="text-center">GeoJSON Entries</h5>
 
             <% entries.forEach(entry=> { %>
                 <div class="card">
-                    <h2>
-                        Id: <%= entry.features[0].properties.THEID %>
-                    </h2>
-                    <p>Shape_Area: <%= entry.features[0].properties.Shape_Area %>
-                    </p>
-                    <p>Shape_Length: <%= entry.features[0].properties.Shape_Length %>
-                    </p>
-                    <button class="btn btn-md btn-primary"
-                        onclick="window.location.href='/geo-entry/<%= entry._id %>'">View map</button>
+                    <h6>
+                        Name: <%= entry.name %>
+                    </h6><a class="btn btn-md btn-primary" href='/geo-entry/<%= entry._id %>'>View geojson
+                        layer</a>
                 </div>
                 <% }); %>
                     <%- include('partials/footer') %>

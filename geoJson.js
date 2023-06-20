@@ -20,31 +20,27 @@ const geoJSONSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: ['FeatureCollection'],
-        required: true
+        required: true,
     },
-    features: {
-        type: [{
-            type: mongoose.Schema.Types.Mixed,
-            geometry: {
-                type: {
-                    type: String,
-                    enum: ['Point', 'LineString', 'Polygon']
-                },
-                coordinates: {
-                    type: [[[Number]]],
-                    required: true
-                }
-            },
-            properties: {
-                type: mongoose.Schema.Types.Mixed
-            }
-        }],
-        required: true
+    coordinates: {
+        type: [Number],
+        required: true,
     }
 });
 
-const GeoJSONModel = mongoose.model('GeoJSON', geoJSONSchema);
+const MySchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    geoJSON: {
+        type: geoJSONSchema,
+        required: true,
+    },
+});
+
+const MyModel = mongoose.model('MyModel', MySchema);
 
 module.exports = {
-    GeoJSONModel: GeoJSONModel, connectDb: connectDb
+    GeoJSONModel: MyModel, connectDb: connectDb
 };

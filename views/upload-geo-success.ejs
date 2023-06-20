@@ -1,17 +1,9 @@
 <%- include('partials/header') %>
     <%- include('partials/nav') %>
         <h1>Success!</h1>
-        <p>The GeoJSON entry has been created with the following details:</p>
+        <p>
+            <%= entry.name %> GeoJSON entry has been created.
+        </p>
 
-        <ul>
-            <li><strong>Name:</strong>
-                <%= entry.properties.name %>
-            </li>
-            <li><strong>Latitude:</strong>
-                <%= entry.geometry.coordinates[1] %>
-            </li>
-            <li><strong>Longitude:</strong>
-                <%= entry.geometry.coordinates[0] %>
-            </li>
-        </ul>
+        <a href="//pload-geo" class="btn btn-primary btn-lg mx-auto d-block">Back to listings</a>
         <%- include('partials/footer') %>

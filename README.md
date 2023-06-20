@@ -2,6 +2,8 @@
 
 This repository contains the code for a Real Estate Manager application. The application allows users to manage real estate listings, including creating, updating, and deleting listings. It utilises the googlemaps api to display the marker of the location of a listing on a map view. Users can access the details of a listing by clicking on a marker.
 
+![Home (admin)](./Images/home.png)
+
 ## How It Works
 
 The application is built using Node.js, Express.js, MongoDB, and Mongoose. It follows the Model-View-Controller (MVC) architectural pattern.
@@ -13,6 +15,19 @@ The application is built using Node.js, Express.js, MongoDB, and Mongoose. It fo
 - The `views` folder contains the EJS templates for rendering the HTML views. The `home.ejs` file displays the list of real estate listings, the `detail.ejs` file displays the details of a listing, while the `update.ejs` file provides a form for updating a listing. 
 
 - The `home.ejs` and `detail.ejs` ejs templates make use of the googlemaps api to display a map with markers of the coordinates of a real estate listing.
+
+## UI elements
+# Listing detail page
+![Detail](./Images/detail.png)
+
+# Create listing
+![Detail](./Images/create.png)
+
+# Update listing
+![Detail](./Images/update.png)
+
+# Assign coordinates
+![Detail](./Images/coordinates.png)
 
 ## Vulnerabilities and Recommendations
 

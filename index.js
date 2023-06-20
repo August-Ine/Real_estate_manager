@@ -96,7 +96,7 @@ app.get('/', async (req, res) => {
 });
 
 app.post('/login', passport.authenticate('local', {
-    successRedirect: '/home', // Redirect to the dashboard upon successful login
+    successRedirect: '/home',// Redirect to the dashboard upon successful login
     failureRedirect: '/', // Redirect back to the login page if authentication fails
     failureFlash: true // Enable flash messages for authentication failures
 }), (req, res) => {
@@ -352,12 +352,13 @@ app.post('/upload-geo', upload.single('file'), async (req, res) => {
     try {
         const file = req.file;
         const filePath = file.path;
+        const geoName = req.body.name;
 
         // Read the uploaded file
         const geojsonData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
         // Save the GeoJSON data to MongoDB
-        await saveGeoJSONToMongoDB(geojsonData);
+        await saveGeoJSONToMongoDB(geojsonData, geoName);
 
         // Delete the uploaded file from the server
         fs.unlinkSync(filePath);
@@ -369,12 +370,10 @@ app.post('/upload-geo', upload.single('file'), async (req, res) => {
     }
 });
 
-async function saveGeoJSONToMongoDB(geoJSONData) {
+async function saveGeoJSONToMongoDB(geoJSONData, geoName) {
     // Create a new instance of GeoJSONModel
-    const geoJSONInstance = new GeoJSONModel.GeoJSONModel({
-        type: geoJSONData.type,
-        features: geoJSONData.features
-    });
+    const geoJSONInstance = new GeoJSONModel.GeoJSONModel({ name: geoName, geoJSON: geoJSONData });
+
 
     // Save the GeoJSON data to the database
     await geoJSONInstance.save();
@@ -386,7 +385,7 @@ app.get('/geo-entries', async (req, res) => {
     try {
         // Assuming you have a Mongoose model called 'Entry' for your GeoJSON entries
         const entries = await GeoJSONModel.GeoJSONModel.find({});
-
+        console.log(entries[0]._id);
         res.render('browse-geojson', { entries });
     } catch (error) {
         console.error('Error retrieving GeoJSON entries:', error);
@@ -396,12 +395,22 @@ app.get('/geo-entries', async (req, res) => {
 
 app.get('/geo-entry/:id', async (req, res) => {
     const entryId = req.params.id;
+    console.log('value is ' + entryId);
     try {
-        // Assuming you have a Mongoose model called 'Entry' for your GeoJSON entries
-        const entry = await GeoJSONModel.GeoJSONModel.findById(entryId);
-        const geojson = JSON.stringify(entry);
+        if (entryId) {
+            const entry = await GeoJSONModel.GeoJSONModel.findById(entryId);
 
-        res.render('viewgeojson', { geoJSONData: geojson, mapsKey: mapsKey });
+            if (entry) {
+                console.log(entry.geoJSON);
+                res.render('viewgeojson', {
+                    geoJSONData: entry.geoJSON, mapsKey: mapsKey
+                });
+            }
+            else { res.status(404).json('Entry does not exist in db') }
+        } else {
+            res.status(400).json('Request param is ' + entry);
+        }
+
     } catch (error) {
         console.error('Error retrieving GeoJSON entry:', error);
         res.status(500).json({ error: 'Error retrieving GeoJSON entry' });
