@@ -17,16 +17,16 @@ The application is built using Node.js, Express.js, MongoDB, and Mongoose. It fo
 - The `home.ejs` and `detail.ejs` ejs templates make use of the googlemaps api to display a map with markers of the coordinates of a real estate listing.
 
 ## UI elements
-# Listing detail page
+### Listing detail page
 ![Detail](./Images/detail.png)
 
-# Create listing
+### Create listing
 ![Detail](./Images/create.png)
 
-# Update listing
+### Update listing
 ![Detail](./Images/update.png)
 
-# Assign coordinates
+### Assign coordinates
 ![Detail](./Images/coordinates.png)
 
 ## Vulnerabilities and Recommendations
